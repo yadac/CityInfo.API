@@ -28,11 +28,6 @@ namespace CityInfo.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
             else
             {
                 app.UseExceptionHandler();
