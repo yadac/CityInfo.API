@@ -33,6 +33,8 @@ namespace CityInfo.API
                 app.UseExceptionHandler();
             }
 
+            app.UseMvc();
+
 
             //app.Run((context) =>
             //{
