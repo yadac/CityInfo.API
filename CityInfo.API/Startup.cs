@@ -33,6 +33,10 @@ namespace CityInfo.API
                 app.UseExceptionHandler();
             }
 
+            // show the return status code in page.
+            app.UseStatusCodePages();
+
+            // use mvc function.
             app.UseMvc();
 
 
