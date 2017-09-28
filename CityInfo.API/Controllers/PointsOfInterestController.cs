@@ -5,24 +5,44 @@ using System.Threading.Tasks;
 using CityInfo.API.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CityInfo.API.Controllers
 {
     [Route("api/cities")]
     public class PointsOfInterestController : Controller
-
     {
+        private ILogger<PointsOfInterestController> _logger;
+
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger)
+        {
+            // di = not create instance.
+            _logger = logger;
+        }
+         
         // argument name has to be same value with that is in url pattern {}. 
         [HttpGet("{cityId}/pointsofinterest")]
         public IActionResult GetPointsOfInterest(int cityId)
         {
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
-            if (city == null)
+            try
             {
-                return NotFound();
-            }
+                throw new Exception("sample exception");
 
-            return Ok(city.PointOfInterestDtos);
+                var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
+                if (city == null)
+                {
+                    _logger.LogInformation($"city with id {cityId} was not found when accesing point of interest.");
+                    return NotFound();
+                }
+
+                return Ok(city.PointOfInterestDtos);
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical($"*** exception raise when accesing point of interest by {cityId} ***");
+                return StatusCode(500, "server error");
+            }
         }
 
         [HttpGet("{cityId}/pointsofinterest/{pId}", Name = "GetPointOfInterest")]
