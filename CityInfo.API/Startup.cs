@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
+using CityInfo.API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CityInfo.API
 {
@@ -48,6 +50,9 @@ namespace CityInfo.API
             // di custom service.
             services.AddTransient<IMailService, LocalMailService>();
             //services.AddTransient<IMailService, CloudMailService>();
+
+            var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Database=CityInfoDB;Trusted_Connection=True;";
+            services.AddDbContext<CityInfoContext>(o => o.UseSqlServer(connectionString));
 
         }
 
