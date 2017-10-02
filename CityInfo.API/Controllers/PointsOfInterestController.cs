@@ -95,26 +95,23 @@ namespace CityInfo.API.Controllers
                 return BadRequest();
             }
 
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
-            if (city == null)
+            if (!_cityInfoRepository.CityExists(cityId))
             {
                 return NotFound();
             }
 
-            var maxPointOfInterestId =
-                CitiesDataStore.Current.Cities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id);
-
-            var finalPointOfInterest = new PointOfInterestDto()
+            var finalPointOfInterest = Mapper.Map<Entities.PointOfInterest>(pointOfInterest);
+            _cityInfoRepository.AddPointOfInterestForCity(cityId, finalPointOfInterest);
+            if (!_cityInfoRepository.Save())
             {
-                Id = ++maxPointOfInterestId,
-                Name = pointOfInterest.Name,
-                Description = pointOfInterest.Description,
-            };
+                return StatusCode(500, "A problem happened while handling your request.");
+            }
 
-            city.PointsOfInterest.Add(finalPointOfInterest);
+            var createPointOfInterestForReturn = Mapper.Map<PointOfInterestDto>(finalPointOfInterest);
 
             // like get behavior?
-            return CreatedAtRoute("GetPointOfInterest", new { cityId = cityId, pId = finalPointOfInterest.Id }, finalPointOfInterest);
+            return CreatedAtRoute("GetPointOfInterest", 
+                new { cityId = cityId, pId = createPointOfInterestForReturn.Id }, createPointOfInterestForReturn);
         }
 
         [HttpPost("{cityId}/pointsofinterest/{pId}")]
