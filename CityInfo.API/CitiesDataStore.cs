@@ -22,7 +22,7 @@ namespace CityInfo.API
                     Id = 1,
                     Name = "New York",
                     Description = "The one with that big park.",
-                    PointOfInterestDtos = new List<PointOfInterestDto>(){
+                    PointsOfInterest = new List<PointOfInterestDto>(){
                         new PointOfInterestDto()
                         {
                             Id = 1,
@@ -42,7 +42,7 @@ namespace CityInfo.API
                     Id = 2,
                     Name = "Tokyo",
                     Description = "2010 olympic dome.",
-                    PointOfInterestDtos = new List<PointOfInterestDto>(){
+                    PointsOfInterest = new List<PointOfInterestDto>(){
                         new PointOfInterestDto()
                         {
                             Id = 1,
@@ -62,7 +62,7 @@ namespace CityInfo.API
                     Id = 3,
                     Name = "Paris",
                     Description = "The one with that big tower.",
-                    PointOfInterestDtos = new List<PointOfInterestDto>(){
+                    PointsOfInterest = new List<PointOfInterestDto>(){
                         new PointOfInterestDto()
                         {
                             Id = 1,

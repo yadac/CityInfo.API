@@ -1,4 +1,5 @@
-﻿using CityInfo.API.Models;
+﻿using AutoMapper;
+using CityInfo.API.Models;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -19,18 +20,8 @@ namespace CityInfo.API.Controllers
         [HttpGet]
         public IActionResult GetCities()
         {
-            // return Ok(CitiesDataStore.Current.Cities);
             var cities = _cityInfoRepository.GetCities();
-            var result = new List<CityWithoutPointsOfInterestDto>();
-            foreach (var city in cities)
-            {
-                result.Add(new CityWithoutPointsOfInterestDto()
-                {
-                    Id = city.Id,
-                    Name = city.Name,
-                    Description = city.Description,
-                });
-            }
+            var result = Mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
             return Ok(result);
 
         }
@@ -38,49 +29,19 @@ namespace CityInfo.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCity(int id, bool includePointsOfInterest = false)
         {
-            //var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
-            //if (city == null)
-            //{
-            //    return NotFound();
-            //}
-            //return Ok(city);
-
             var city = _cityInfoRepository.GetCity(id, includePointsOfInterest);
-
             if (city == null) {
                 return NotFound();
             }
 
             if (includePointsOfInterest)
             {
-                var cityResult = new CityDto
-                {
-                    Id = city.Id,
-                    Name = city.Name,
-                    Description = city.Description,
-                };
-
-                foreach (var poi in city.PointsOfInterest)
-                {
-                    cityResult.PointOfInterestDtos.Add(new PointOfInterestDto()
-                    {
-                        Id = poi.Id,
-                        Name = poi.Name,
-                        Description = poi.Description,
-                    });
-                }
-
+                var cityResult = Mapper.Map<CityDto>(city);
                 return Ok(cityResult);
             }
 
             // not include
-            var cityWithoutPointsOfInterestDto = new CityWithoutPointsOfInterestDto()
-            {
-                Id = city.Id,
-                Name = city.Name,
-                Description = city.Description,
-            };
-
+            var cityWithoutPointsOfInterestDto = Mapper.Map<CityWithoutPointsOfInterestDto>(city);
             return Ok(cityWithoutPointsOfInterestDto);
 
         }

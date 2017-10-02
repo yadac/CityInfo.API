@@ -84,6 +84,14 @@ namespace CityInfo.API
             // show the return status code in page.
             app.UseStatusCodePages();
 
+            // use automapper
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Entities.City, Models.CityWithoutPointsOfInterestDto>();
+                cfg.CreateMap<Entities.City, Models.CityDto>();
+                cfg.CreateMap<Entities.PointOfInterest, Models.PointOfInterestDto>();
+            });
+
             // use mvc function.
             app.UseMvc();
 
